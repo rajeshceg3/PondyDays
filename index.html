@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pondicherry: A Digital Reverie (Polished)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        /* --- DESIGN PHILOSOPHY & SETUP --- */
+        :root {
+            --bg-light: #F8F5F2;
+            --text-dark: #4E4A47;
+            --pastel-sand: #F3D5A5;
+            --pastel-sky: #A8D8EA;
+            --pastel-terracotta: #E4B4B4;
+            --pastel-seafoam: #BDE0C3;
+            --shadow-color: rgba(78, 74, 71, 0.1);
+            --shadow-soft: 0 10px 30px var(--shadow-color);
+            --shadow-lifted: 0 25px 50px -12px var(--shadow-color);
+            --font-serif: 'Playfair Display', serif;
+            --font-sans: 'Inter', sans-serif;
+            --transition-curve: cubic-bezier(0.645, 0.045, 0.355, 1);
+            --transition-duration: 0.6s; /* Slightly faster for a snappier feel */
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            overflow-x: hidden;
+            transition: background-color var(--transition-duration) var(--transition-curve);
+        }
+
+        /* --- GEOMETRIC BACKGROUND PATTERN --- */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><path d="M0 0 L40 40 M40 0 L0 40" stroke="%23EAE6E3" stroke-width="0.5"/></svg>');
+            opacity: 0.5;
+            z-index: -2;
+            transition: opacity var(--transition-duration) var(--transition-curve);
+        }
+
+        /* --- HERO SECTION --- */
+        .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 2rem; position: relative; overflow: hidden; }
+        .hero__background-shape { position: absolute; z-index: -1; border-radius: 50%; filter: blur(80px); animation: slow-pulse 15s infinite alternate; }
+        #shape1 { width: 40vw; height: 40vw; min-width: 300px; min-height: 300px; background: linear-gradient(135deg, var(--pastel-sand), var(--pastel-sky)); top: 10%; left: 5%; }
+        #shape2 { width: 35vw; height: 35vw; min-width: 250px; min-height: 250px; background: linear-gradient(135deg, var(--pastel-terracotta), var(--pastel-seafoam)); bottom: 5%; right: 10%; animation-delay: -7s; }
+        @keyframes slow-pulse { from { transform: scale(0.9) rotate(0deg); } to { transform: scale(1.1) rotate(20deg); } }
+        .hero__title { font-family: var(--font-serif); font-size: clamp(3rem, 12vw, 8rem); line-height: 1; letter-spacing: 0.03em; animation: fadeIn 1.5s var(--transition-curve) both; }
+        .hero__subtitle { font-weight: 300; font-size: clamp(1rem, 3vw, 1.5rem); letter-spacing: 0.3em; text-transform: uppercase; margin-top: 1.5rem; opacity: 0; animation: fadeIn 1.5s 0.5s var(--transition-curve) both; }
+        .scroll-indicator { position: absolute; bottom: 2rem; opacity: 0; animation: fadeIn 1.5s 1s var(--transition-curve) both, bounce 2s infinite; font-size: 1.2rem; font-weight: 300; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes bounce { 0%, 20%, 50%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(-10px); } 60% { transform: translateY(-5px); } }
+
+        /* --- GALLERY SECTION --- */
+        .gallery-container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 10vh 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 4rem;
+            transition: transform var(--transition-duration) var(--transition-curve), filter var(--transition-duration) var(--transition-curve);
+        }
+        
+        .postcard {
+            position: relative;
+            cursor: pointer;
+            aspect-ratio: 3 / 4;
+            /* Will-change hints to the browser about upcoming transformations */
+            will-change: transform;
+            transition: transform var(--transition-duration) var(--transition-curve),
+                        box-shadow var(--transition-duration) var(--transition-curve);
+        }
+        .postcard:hover { transform: translateY(-10px) scale(1.02); box-shadow: var(--shadow-lifted); }
+        .postcard.is-opening, .postcard.is-closing { cursor: default; } /* Prevent hover effects during transition */
+        .postcard__image-wrapper { width: 100%; height: 100%; border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-soft); transition: box-shadow var(--transition-duration) var(--transition-curve); }
+        .postcard__image { width: 100%; height: 100%; object-fit: cover; transform: scale(1.05); transition: transform 0.7s var(--transition-curve); }
+        .postcard:hover .postcard__image { transform: scale(1.1); }
+        .postcard__overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 50%); border-radius: 12px; display: flex; flex-direction: column; justify-content: flex-end; padding: 1.5rem; color: white; opacity: 1; transition: opacity 0.5s var(--transition-curve); }
+        .postcard__title { font-family: var(--font-serif); font-size: 1.75rem; line-height: 1.2; transform: translateY(10px); transition: transform 0.5s var(--transition-curve); }
+        .postcard__tagline { font-weight: 300; font-size: 0.9rem; opacity: 0; transition: opacity 0.5s var(--transition-curve); }
+        .postcard:hover .postcard__title { transform: translateY(0); }
+        .postcard:hover .postcard__tagline { opacity: 1; }
+
+        /* --- FOCUS MODE: The Immersive Experience --- */
+        .focus-content {
+            display: none;
+            padding: 2rem;
+            max-width: 600px;
+        }
+        .focus-content p { font-size: 1.1rem; line-height: 1.8; font-weight: 300; margin-bottom: 1.5rem; }
+        
+        /* FIX: Manages the initial state via CSS, not inline styles */
+        .close-button {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            font-size: 2rem;
+            background: none;
+            border: none;
+            color: var(--text-dark);
+            cursor: pointer;
+            z-index: 1002;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: opacity 0.5s var(--transition-curve), transform 0.5s var(--transition-curve);
+            pointer-events: none; /* Inactive by default */
+        }
+        /* FIX: New class to control visibility */
+        .close-button.is-visible {
+            opacity: 0.7;
+            transform: scale(1);
+            transition-delay: 0.3s;
+            pointer-events: auto; /* Clickable when visible */
+        }
+        .close-button.is-visible:hover { opacity: 1; transform: scale(1.1); }
+        
+        /* FIX: Dedicated overlay for click-outside-to-close */
+        .click-outside-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0);
+            z-index: 999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity var(--transition-duration) var(--transition-curve);
+        }
+
+        /* Body states for focus mode */
+        body.focus-active { overflow: hidden; }
+        body.focus-active .gallery-container { filter: blur(10px); transform: scale(0.98); }
+        body.focus-active::before { opacity: 0.1; }
+        body.focus-active .click-outside-overlay { opacity: 1; pointer-events: auto; }
+        
+        .postcard.is-active {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 90vw;
+            max-width: 900px;
+            height: 60vh;
+            max-height: 600px;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            cursor: default;
+            background: var(--bg-light);
+            box-shadow: 0 40px 100px -20px rgba(0,0,0,0.3);
+            border-radius: 12px;
+            overflow: hidden;
+            /* FIX: Refined transition for FLIP */
+            transition: transform var(--transition-duration) var(--transition-curve),
+                        width var(--transition-duration) var(--transition-curve),
+                        height var(--transition-duration) var(--transition-curve),
+                        top var(--transition-duration) var(--transition-curve),
+                        left var(--transition-duration) var(--transition-curve),
+                        box-shadow var(--transition-duration) var(--transition-curve);
+        }
+        
+        .postcard.is-active .postcard__image-wrapper { height: 100%; border-radius: 0; box-shadow: none; }
+        .postcard.is-active .postcard__image { transform: scale(1); }
+        /* FIX: Synchronized overlay fade-out */
+        .postcard.is-active .postcard__overlay { opacity: 0; transition: opacity 0.3s; }
+        .postcard.is-active .focus-content {
+            display: block;
+            opacity: 0;
+            transform: translateY(20px);
+            /* FIX: Synchronized content fade-in */
+            animation: fadeIn 0.5s 0.3s var(--transition-curve) both;
+        }
+
+        /* --- RESPONSIVE ADJUSTMENTS --- */
+        @media (max-width: 768px) {
+            .postcard.is-active {
+                grid-template-columns: 1fr;
+                grid-template-rows: 250px 1fr;
+                height: 85vh; /* A bit more height for mobile */
+                width: 95vw;
+            }
+            .focus-content {
+                padding: 1.5rem;
+                /* FIX: Scoped overflow-y for mobile */
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+            }
+            .focus-content p { font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="hero">
+        <div class="hero__background-shape" id="shape1"></div>
+        <div class="hero__background-shape" id="shape2"></div>
+        <h1 class="hero__title">Pondicherry</h1>
+        <h2 class="hero__subtitle">A Digital Reverie</h2>
+        <div class="scroll-indicator">↓</div>
+    </header>
+
+    <main class="gallery-container">
+        <!-- Postcards remain the same as before -->
+        <article class="postcard" data-bg-color="#F3D5A5">
+            <div class="postcard__image-wrapper"><img src="https://images.unsplash.com/photo-1605301257473-581537d8841a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80" alt="Sun-drenched yellow wall" class="postcard__image"></div>
+            <div class="postcard__overlay"><h3 class="postcard__title">The French Quarter</h3><span class="postcard__tagline">Bougainvillea & Boulevards</span></div>
+            <div class="focus-content"><h3 class="postcard__title" style="margin-bottom: 1.5rem;">The French Quarter</h3><p>Walk through streets named Rue Romain Rolland and feel time slow down. Here, colonial-era villas draped in bougainvillea stand in quiet testimony to a bygone era. The air is thick with the scent of sea salt and fresh-baked bread. It's a place for aimless wandering and peaceful contemplation.</p><p>Discover hidden courtyards, boutique shops, and charming cafés perfect for an afternoon espresso.</p></div>
+        </article>
+        <article class="postcard" data-bg-color="#E4B4B4">
+            <div class="postcard__image-wrapper"><img src="https://images.unsplash.com/photo-1593755037922-42158882414b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80" alt="The golden Matrimandir" class="postcard__image"></div>
+            <div class="postcard__overlay"><h3 class="postcard__title">Auroville</h3><span class="postcard__tagline">The Dawn of a City</span></div>
+            <div class="focus-content"><h3 class="postcard__title" style="margin-bottom: 1.5rem;">Auroville</h3><p>More than a place, Auroville is an idea. An experimental township dedicated to human unity. At its heart lies the Matrimandir, a golden sphere for silent concentration. The atmosphere here is one of profound peace and forward-thinking optimism, a true sanctuary for the soul.</p><p>Visitors are encouraged to visit the viewing point or, with prior booking, access the inner chamber for meditation.</p></div>
+        </article>
+        <article class="postcard" data-bg-color="#A8D8EA">
+            <div class="postcard__image-wrapper"><img src="https://images.unsplash.com/photo-1622611797833-b44a8b7d9e4c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80" alt="Promenade Beach at dawn" class="postcard__image"></div>
+            <div class="postcard__overlay"><h3 class="postcard__title">Promenade Beach</h3><span class="postcard__tagline">Where the City Meets the Sea</span></div>
+            <div class="focus-content"><h3 class="postcard__title" style="margin-bottom: 1.5rem;">Promenade Beach</h3><p>A 1.2-kilometer stretch along the Bay of Bengal, the Promenade is the vibrant heart of Pondicherry's coastline. Closed to traffic in the evenings, it becomes a pedestrian's paradise. Watch the sunrise, feel the sea breeze, and witness the city come alive.</p><p>The iconic Gandhi statue and the old lighthouse stand as silent sentinels on this beautiful, bustling shoreline.</p></div>
+        </article>
+        <article class="postcard" data-bg-color="#BDE0C3">
+            <div class="postcard__image-wrapper"><img src="https://images.unsplash.com/photo-1609249798229-291d3615f453?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80" alt="South Indian temple gopuram" class="postcard__image"></div>
+            <div class="postcard__overlay"><h3 class="postcard__title">Manakula Vinayagar</h3><span class="postcard__tagline">Ancient Divinity</span></div>
+            <div class="focus-content"><h3 class="postcard__title" style="margin-bottom: 1.5rem;">Manakula Vinayagar</h3><p>A splash of vibrant Dravidian architecture and deep-rooted spirituality just a stone's throw from the French Quarter. This ancient temple, dedicated to Lord Ganesha, predates the French occupation. Its energy is palpable, a blend of incense, devotion, and centuries of faith.</p><p>Don't miss the temple elephant, Lakshmi, who blesses devotees with a gentle touch of her trunk.</p></div>
+        </article>
+    </main>
+    
+    <!-- FIX: A dedicated, non-intrusive overlay for handling clicks -->
+    <div class="click-outside-overlay"></div>
+    <!-- FIX: Removed inline style -->
+    <button class="close-button">×</button>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const postcards = document.querySelectorAll('.postcard');
+            const body = document.body;
+            const closeButton = document.querySelector('.close-button');
+            const clickOutsideOverlay = document.querySelector('.click-outside-overlay');
+            let activePostcard = null;
+            let lastScrollY = 0;
+
+            const openPostcard = (postcard) => {
+                if (activePostcard || postcard.classList.contains('is-opening')) return;
+                
+                lastScrollY = window.scrollY;
+                activePostcard = postcard;
+                
+                // FIX (Step 1): Robust FLIP Animation
+                // 1. Get the initial position (First)
+                const initialRect = postcard.getBoundingClientRect();
+                
+                // Add a class to set up the final state styles
+                postcard.classList.add('is-active', 'is-opening');
+
+                // 2. Get the final position (Last)
+                const finalRect = postcard.getBoundingClientRect();
+
+                // 3. Invert: Calculate the transform needed to make the final state look like the initial state
+                const invertX = initialRect.left - finalRect.left;
+                const invertY = initialRect.top - finalRect.top;
+                const scaleX = initialRect.width / finalRect.width;
+                const scaleY = initialRect.height / finalRect.height;
+                
+                // Apply the inverse transform without a transition
+                postcard.style.transition = 'none';
+                postcard.style.transform = `translate(${invertX}px, ${invertY}px) scale(${scaleX}, ${scaleY})`;
+                postcard.style.transformOrigin = 'top left';
+
+                // 4. Play: Force a reflow and then remove the inline styles to play the transition
+                requestAnimationFrame(() => {
+                    postcard.style.transition = '';
+                    postcard.style.transform = '';
+                    postcard.style.transformOrigin = '';
+                });
+
+                body.classList.add('focus-active');
+                body.style.backgroundColor = postcard.dataset.bgColor || 'var(--bg-light)';
+                
+                // FIX (Step 5): Use class for visibility
+                closeButton.classList.add('is-visible');
+
+                // Clean up transition class
+                postcard.addEventListener('transitionend', () => {
+                    postcard.classList.remove('is-opening');
+                }, { once: true });
+            };
+
+            const closePostcard = () => {
+                if (!activePostcard || activePostcard.classList.contains('is-closing')) return;
+                
+                // Store the grid position of the card *before* removing the active class
+                const placeholder = Array.from(postcards).find(p => p === activePostcard);
+                const initialRect = placeholder.getBoundingClientRect();
+
+                activePostcard.classList.add('is-closing');
+                body.classList.remove('focus-active');
+                body.style.backgroundColor = 'var(--bg-light)';
+                closeButton.classList.remove('is-visible');
+
+                // Animate back to the original position
+                activePostcard.style.transform = `translate(${initialRect.left}px, ${initialRect.top}px) scale(${initialRect.width / activePostcard.offsetWidth}, ${initialRect.height / activePostcard.offsetHeight})`;
+                activePostcard.style.transformOrigin = 'top left';
+
+                // Listen for the end of the transition
+                activePostcard.addEventListener('transitionend', function onTransitionEnd() {
+                    this.removeEventListener('transitionend', onTransitionEnd);
+
+                    this.classList.remove('is-active', 'is-closing');
+                    this.style.transform = '';
+                    this.style.transformOrigin = '';
+                    this.style.transition = '';
+                    
+                    activePostcard = null;
+                    
+                    // FIX (Step 3): Restore scroll position instantly
+                    window.scrollTo({ top: lastScrollY, behavior: 'instant' });
+                });
+            };
+
+            postcards.forEach(postcard => {
+                postcard.addEventListener('click', (e) => {
+                    if (postcard.classList.contains('is-active')) return;
+                    e.preventDefault();
+                    openPostcard(postcard);
+                });
+            });
+
+            closeButton.addEventListener('click', closePostcard);
+            // FIX (Step 2): Implement click-outside-to-close
+            clickOutsideOverlay.addEventListener('click', closePostcard);
+
+            window.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && activePostcard) {
+                    closePostcard();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+
