@@ -147,7 +147,13 @@
 
         /* Body states for focus mode */
         body.focus-active { overflow: hidden; }
-        body.focus-active .gallery-container { filter: blur(10px); transform: scale(0.98); }
+        body.focus-active .gallery-container {
+            /* FIX: The blur is now applied to individual cards, not the container */
+            transform: scale(0.98);
+        }
+        body.focus-active .postcard:not(.is-active) {
+            filter: blur(10px);
+        }
         body.focus-active::before { opacity: 0.1; }
         body.focus-active .click-outside-overlay { opacity: 1; pointer-events: auto; }
         
