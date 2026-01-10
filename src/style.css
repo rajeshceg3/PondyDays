@@ -225,6 +225,19 @@ body.focus-active .click-outside-overlay { opacity: 1; pointer-events: auto; }
     transform: translateY(-3px);
 }
 
+/* --- LOADING STATE FOR MAP --- */
+#map::before {
+    content: 'Loading Map...';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.5rem;
+    color: var(--text-dark);
+    opacity: 0.5;
+    z-index: -1;
+}
+
 /* --- RESPONSIVE ADJUSTMENTS --- */
 @media (max-width: 768px) {
     .postcard.is-active {
