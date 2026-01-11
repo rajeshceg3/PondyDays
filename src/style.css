@@ -96,6 +96,20 @@ body::before {
 }
 .focus-content p { font-size: 1.1rem; line-height: 1.8; font-weight: 300; margin-bottom: 1.5rem; }
 
+.focus-title-margin {
+    margin-bottom: 1.5rem;
+}
+
+.image-error-placeholder {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    background: #eee;
+    color: #666;
+    font-size: 0.8rem;
+}
+
 .close-button {
     position: fixed;
     top: 2rem;
@@ -227,15 +241,38 @@ body.focus-active .click-outside-overlay { opacity: 1; pointer-events: auto; }
 
 /* --- LOADING STATE FOR MAP --- */
 #map::before {
-    content: 'Loading Map...';
+    content: '';
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 1.5rem;
-    color: var(--text-dark);
-    opacity: 0.5;
+    width: 40px;
+    height: 40px;
+    margin-left: -20px;
+    margin-top: -20px;
+    border: 3px solid rgba(78, 74, 71, 0.2);
+    border-top-color: var(--text-dark);
+    border-radius: 50%;
+    animation: spinner 0.8s linear infinite;
     z-index: -1;
+}
+
+@keyframes spinner {
+    to { transform: rotate(360deg); }
+}
+
+/* --- ACCESSIBILITY & PREFERENCES --- */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+:focus-visible {
+    outline: 2px solid var(--text-dark);
+    outline-offset: 4px;
 }
 
 /* --- RESPONSIVE ADJUSTMENTS --- */

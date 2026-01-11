@@ -1,7 +1,7 @@
 import { postcards } from './data/postcards.js';
 import GalleryController from './modules/GalleryController.js';
-import MapController from './modules/MapController.js';
 import FocusManager from './modules/FocusManager.js';
+import { loadMap } from './utils/lazyLoad.js';
 import './style.css'; // Vite imports CSS
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Modules
     const focusManager = new FocusManager();
-    const mapController = new MapController('map', postcards);
+    let mapController = null;
 
     // Gallery Controller Setup
     const galleryController = new GalleryController(
@@ -44,13 +44,24 @@ document.addEventListener('DOMContentLoaded', () => {
     galleryController.render();
 
     // Event Listeners: Map
-    mapViewButton.addEventListener('click', () => {
+    mapViewButton.addEventListener('click', async () => {
         mainContent.classList.toggle('map-active');
         const isActive = mainContent.classList.contains('map-active');
 
         if (isActive) {
             mapViewButton.textContent = 'Gallery View';
-            mapController.initMap();
+            if (!mapController) {
+                // Lazy load the map
+                try {
+                    mapController = await loadMap('map', postcards);
+                } catch (e) {
+                    // eslint-disable-next-line no-console
+                    console.error("Error loading map:", e);
+                    mapViewButton.textContent = 'Map Unavailable';
+                }
+            } else {
+                mapController.initMap();
+            }
         } else {
             mapViewButton.textContent = 'Map View';
         }

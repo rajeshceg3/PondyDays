@@ -36,36 +36,65 @@ export default class GalleryController {
         const srcset = `${thumbUrl} 600w, ${mediumUrl} 900w, ${fullUrl} 1200w`;
         const sizes = "(max-width: 600px) 90vw, (max-width: 900px) 50vw, 300px";
 
-        article.innerHTML = `
-            <div class="postcard__image-wrapper">
-                <img src="${thumbUrl}"
-                     srcset="${srcset}"
-                     sizes="${sizes}"
-                     alt="${item.alt}"
-                     class="postcard__image"
-                     loading="lazy"
-                     width="600" height="800">
-            </div>
-            <div class="postcard__overlay">
-                <h3 class="postcard__title">${item.title}</h3>
-                <span class="postcard__tagline">${item.tagline}</span>
-            </div>
-            <div class="focus-content">
-                <h3 class="postcard__title" style="margin-bottom: 1.5rem;">${item.title}</h3>
-                <p>${item.desc}</p>
-            </div>
-        `;
+        // Create elements securely using DOM API to prevent XSS
+        const imageWrapper = document.createElement('div');
+        imageWrapper.className = 'postcard__image-wrapper';
+
+        const img = document.createElement('img');
+        img.src = thumbUrl;
+        img.srcset = srcset;
+        img.sizes = sizes;
+        img.alt = item.alt;
+        img.className = 'postcard__image';
+        img.loading = 'lazy';
+        img.width = 600;
+        img.height = 800;
 
         // Image Error Handling
-        const img = article.querySelector('img');
         img.onerror = () => {
             img.style.display = 'none';
             const errorDiv = document.createElement('div');
             errorDiv.className = 'image-error';
             errorDiv.textContent = 'Image not available';
-            errorDiv.style.cssText = 'display: flex; justify-content: center; align-items: center; height: 100%; background: #eee; color: #666; font-size: 0.8rem;';
-            article.querySelector('.postcard__image-wrapper').appendChild(errorDiv);
+            // Avoid inline styles
+            errorDiv.classList.add('image-error-placeholder');
+            imageWrapper.appendChild(errorDiv);
         };
+
+        imageWrapper.appendChild(img);
+
+        const overlay = document.createElement('div');
+        overlay.className = 'postcard__overlay';
+
+        const title = document.createElement('h3');
+        title.className = 'postcard__title';
+        title.textContent = item.title;
+
+        const tagline = document.createElement('span');
+        tagline.className = 'postcard__tagline';
+        tagline.textContent = item.tagline;
+
+        overlay.appendChild(title);
+        overlay.appendChild(tagline);
+
+        const focusContent = document.createElement('div');
+        focusContent.className = 'focus-content';
+
+        const focusTitle = document.createElement('h3');
+        focusTitle.className = 'postcard__title';
+        // Avoid inline style: style="margin-bottom: 1.5rem;"
+        focusTitle.classList.add('focus-title-margin');
+        focusTitle.textContent = item.title;
+
+        const desc = document.createElement('p');
+        desc.textContent = item.desc;
+
+        focusContent.appendChild(focusTitle);
+        focusContent.appendChild(desc);
+
+        article.appendChild(imageWrapper);
+        article.appendChild(overlay);
+        article.appendChild(focusContent);
 
         const handleOpen = (e) => {
             if (article.classList.contains('is-active')) return;
