@@ -21,6 +21,7 @@ export default class GalleryController {
         article.className = 'postcard';
         article.dataset.index = index;
         article.dataset.bgColor = item.bgColor;
+        article.dataset.themeClass = item.themeClass;
         // Keep these for legacy or CSS usage if needed, though we use data directly now
         article.dataset.lat = item.lat;
         article.dataset.lng = item.lng;
@@ -34,7 +35,7 @@ export default class GalleryController {
 
         // Generate srcset
         const srcset = `${thumbUrl} 600w, ${mediumUrl} 900w, ${fullUrl} 1200w`;
-        const sizes = "(max-width: 600px) 90vw, (max-width: 900px) 50vw, 300px";
+        const sizes = '(max-width: 600px) 90vw, (max-width: 900px) 50vw, 300px';
 
         // Create elements securely using DOM API to prevent XSS
         const imageWrapper = document.createElement('div');
@@ -151,7 +152,7 @@ export default class GalleryController {
         // Update sizes for full screen view to prioritize high res
         const img = postcard.querySelector('img');
         if (img) {
-            img.sizes = "100vw";
+            img.sizes = '100vw';
         }
 
         requestAnimationFrame(() => {
@@ -160,9 +161,13 @@ export default class GalleryController {
             postcard.style.transformOrigin = '';
         });
 
-        postcard.addEventListener('transitionend', () => {
-            postcard.classList.remove('is-opening');
-        }, { once: true });
+        postcard.addEventListener(
+            'transitionend',
+            () => {
+                postcard.classList.remove('is-opening');
+            },
+            { once: true }
+        );
     }
 
     closePostcard() {
@@ -180,7 +185,7 @@ export default class GalleryController {
         // Reset sizes
         const img = postcard.querySelector('img');
         if (img) {
-            img.sizes = "(max-width: 600px) 90vw, (max-width: 900px) 50vw, 300px";
+            img.sizes = '(max-width: 600px) 90vw, (max-width: 900px) 50vw, 300px';
         }
 
         const endRect = postcard.getBoundingClientRect();
@@ -198,13 +203,17 @@ export default class GalleryController {
         postcard.style.transition = 'transform 0.6s cubic-bezier(0.645, 0.045, 0.355, 1)';
         postcard.style.transform = '';
 
-        postcard.addEventListener('transitionend', () => {
-             postcard.classList.remove('is-closing');
-             postcard.style.transition = '';
-             postcard.style.transformOrigin = '';
-             this.activePostcard = null;
-             window.scrollTo({ top: this.lastScrollY, behavior: 'instant' });
-        }, { once: true });
+        postcard.addEventListener(
+            'transitionend',
+            () => {
+                postcard.classList.remove('is-closing');
+                postcard.style.transition = '';
+                postcard.style.transformOrigin = '';
+                this.activePostcard = null;
+                window.scrollTo({ top: this.lastScrollY, behavior: 'instant' });
+            },
+            { once: true }
+        );
     }
 
     closeImmediate() {

@@ -7,16 +7,27 @@
  * @returns {Promise<Object>} - The MapController instance.
  */
 export async function loadMap(elementId, data) {
-    // Show loading spinner if needed, handled by CSS usually
+    const container = document.getElementById(elementId);
+    // Add spinner class
+    container.classList.add('is-loading');
+
     try {
         const { default: MapController } = await import('../modules/MapController.js');
         const mapController = new MapController(elementId, data);
         mapController.initMap();
+
+        // Remove spinner after slight delay to ensure render is smooth
+        requestAnimationFrame(() => {
+            container.classList.remove('is-loading');
+        });
+
         return mapController;
     } catch (error) {
-        // Log error to monitoring service in production
+        container.classList.remove('is-loading');
+        container.innerHTML =
+            '<div class="error-message">Unable to load map. Please try again later.</div>';
         // eslint-disable-next-line no-console
-        console.error("Failed to load map module:", error);
+        console.error('Failed to load map module:', error);
         throw error;
     }
 }

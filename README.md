@@ -12,12 +12,14 @@ A digital reverie of Pondicherry, transformed into a production-ready web applic
 ### Installation
 
 1.  Clone the repository:
+
     ```bash
     git clone https://github.com/your-username/PondyDays.git
     cd PondyDays
     ```
 
 2.  Install dependencies:
+
     ```bash
     npm install
     ```
@@ -29,22 +31,22 @@ A digital reverie of Pondicherry, transformed into a production-ready web applic
 
 ## 🛠 Project Structure
 
--   `src/`: Source code
-    -   `index.html`: Entry point
-    -   `style.css`: Styles
-    -   `app.js`: Application logic
--   `tests/`: End-to-end tests
--   `public/`: Static assets
+- `src/`: Source code
+    - `index.html`: Entry point
+    - `style.css`: Styles
+    - `app.js`: Application logic
+- `tests/`: End-to-end tests
+- `public/`: Static assets
 
 ## ✅ Production Readiness Features
 
--   **Build System**: Vite for optimized bundling and asset management.
--   **Code Quality**: ESLint and Prettier for consistent code style and error catching.
--   **Testing**: Playwright for end-to-end testing of user flows.
--   **CI/CD**: GitHub Actions workflow for automated testing and building.
--   **Security**: Content Security Policy (CSP) and secure dependency management.
--   **Performance**: Lazy loading of images and optimized asset delivery.
--   **UX**: Enhanced animations, accessibility attributes (ARIA), and responsive design.
+- **Build System**: Vite for optimized bundling and asset management.
+- **Code Quality**: ESLint and Prettier for consistent code style and error catching.
+- **Testing**: Playwright for end-to-end testing of user flows.
+- **CI/CD**: GitHub Actions workflow for automated testing and building.
+- **Security**: Content Security Policy (CSP) and secure dependency management.
+- **Performance**: Lazy loading of images and optimized asset delivery.
+- **UX**: Enhanced animations, accessibility attributes (ARIA), and responsive design.
 
 ## 🧪 Running Tests
 

@@ -37,7 +37,7 @@ export default class MapController {
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
-            attribution: '© OpenStreetMap'
+            attribution: '© OpenStreetMap',
         }).addTo(this.map);
 
         this.addMarkers();
@@ -52,7 +52,7 @@ export default class MapController {
                 marker.on('click', () => {
                     // Dispatch a custom event so the main app can handle opening the card
                     const event = new CustomEvent('marker-clicked', {
-                        detail: { index: index, data: item }
+                        detail: { index: index, data: item },
                     });
                     document.dispatchEvent(event);
                 });

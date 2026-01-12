@@ -32,7 +32,9 @@ export default class FocusManager {
         // Find all focusable elements inside the trap element (e.g. the expanded card)
         // We include the closeButton explicitly since it might be outside the card container logic in some designs,
         // but here we pass it in.
-        const focusableContent = this.trapElement.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+        const focusableContent = this.trapElement.querySelectorAll(
+            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
 
         // Convert NodeList to Array and add closeButton if it's not already inside
         const focusableElements = Array.from(focusableContent);
@@ -45,12 +47,14 @@ export default class FocusManager {
         const firstFocusableElement = focusableElements[0];
         const lastFocusableElement = focusableElements[focusableElements.length - 1];
 
-        if (e.shiftKey) { // Shift + Tab
+        if (e.shiftKey) {
+            // Shift + Tab
             if (document.activeElement === firstFocusableElement) {
                 lastFocusableElement.focus();
                 e.preventDefault();
             }
-        } else { // Tab
+        } else {
+            // Tab
             if (document.activeElement === lastFocusableElement) {
                 firstFocusableElement.focus();
                 e.preventDefault();
