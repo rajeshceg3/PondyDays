@@ -1,40 +1,40 @@
 import { test, expect } from '@playwright/test';
 
 test('has title', async ({ page }) => {
-  await page.goto('/');
-  await expect(page).toHaveTitle(/Pondicherry/);
+    await page.goto('/');
+    await expect(page).toHaveTitle(/Pondicherry/);
 });
 
 test('cards are loaded dynamically', async ({ page }) => {
-  await page.goto('/');
-  // Wait for postcards to be present
-  await expect(page.locator('.postcard').first()).toBeVisible();
-  const postcards = await page.locator('.postcard').count();
-  expect(postcards).toBeGreaterThan(0);
+    await page.goto('/');
+    // Wait for postcards to be present
+    await expect(page.locator('.postcard').first()).toBeVisible();
+    const postcards = await page.locator('.postcard').count();
+    expect(postcards).toBeGreaterThan(0);
 });
 
 test('cards can be opened and closed', async ({ page }) => {
-  await page.goto('/');
+    await page.goto('/');
 
-  // Wait for postcards
-  const firstCard = page.locator('.postcard').first();
-  await expect(firstCard).toBeVisible();
+    // Wait for postcards
+    const firstCard = page.locator('.postcard').first();
+    await expect(firstCard).toBeVisible();
 
-  // Click the first postcard
-  await firstCard.click();
+    // Click the first postcard
+    await firstCard.click();
 
-  // Check if it has class is-active
-  await expect(firstCard).toHaveClass(/is-active/);
+    // Check if it has class is-active
+    await expect(firstCard).toHaveClass(/is-active/);
 
-  // Check if close button is visible
-  const closeButton = page.locator('.close-button');
-  await expect(closeButton).toBeVisible();
+    // Check if close button is visible
+    const closeButton = page.locator('.close-button');
+    await expect(closeButton).toBeVisible();
 
-  // Close the card
-  await closeButton.click();
+    // Close the card
+    await closeButton.click();
 
-  // Check if it is no longer active
-  await expect(firstCard).not.toHaveClass(/is-active/);
+    // Check if it is no longer active
+    await expect(firstCard).not.toHaveClass(/is-active/);
 });
 
 test('map view toggles', async ({ page }) => {

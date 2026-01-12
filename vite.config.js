@@ -4,5 +4,5 @@ export default {
         outDir: '../dist',
         emptyOutDir: true,
     },
-    publicDir: '../public'
-}
+    publicDir: '../public',
+};

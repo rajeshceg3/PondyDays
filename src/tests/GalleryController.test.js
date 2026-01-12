@@ -11,8 +11,8 @@ const mockData = [
         bgColor: '#ffffff',
         lat: 0,
         lng: 0,
-        alt: 'Test Alt'
-    }
+        alt: 'Test Alt',
+    },
 ];
 
 describe('GalleryController', () => {
@@ -61,7 +61,10 @@ describe('GalleryController', () => {
 
         // Mock getBoundingClientRect for animation calculations
         vi.spyOn(card, 'getBoundingClientRect').mockReturnValue({
-            top: 0, left: 0, width: 100, height: 100
+            top: 0,
+            left: 0,
+            width: 100,
+            height: 100,
         });
 
         galleryController.openPostcard(card);
@@ -77,7 +80,10 @@ describe('GalleryController', () => {
 
         // Open first
         vi.spyOn(card, 'getBoundingClientRect').mockReturnValue({
-            top: 0, left: 0, width: 100, height: 100
+            top: 0,
+            left: 0,
+            width: 100,
+            height: 100,
         });
         galleryController.openPostcard(card);
 

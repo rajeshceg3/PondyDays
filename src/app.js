@@ -20,18 +20,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const galleryController = new GalleryController(
         '.gallery-container',
         postcards,
-        (card) => { // On Open
+        (card) => {
+            // On Open
             body.classList.add('focus-active');
-            body.style.backgroundColor = card.dataset.bgColor || 'var(--bg-light)';
+            if (card.dataset.themeClass) {
+                body.classList.add(card.dataset.themeClass);
+            }
             closeButton.classList.add('is-visible');
 
             // Trap focus
             focusManager.captureFocus();
             focusManager.setTrapElement(card, closeButton);
         },
-        () => { // On Close
+        () => {
+            // On Close
             body.classList.remove('focus-active');
-            body.style.backgroundColor = 'var(--bg-light)';
+            // Remove any theme classes
+            body.classList.remove('theme-yellow', 'theme-red', 'theme-blue', 'theme-green');
             closeButton.classList.remove('is-visible');
 
             // Release focus
@@ -56,7 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     mapController = await loadMap('map', postcards);
                 } catch (e) {
                     // eslint-disable-next-line no-console
-                    console.error("Error loading map:", e);
+                    console.error('Error loading map:', e);
                     mapViewButton.textContent = 'Map Unavailable';
                 }
             } else {
@@ -75,11 +80,27 @@ document.addEventListener('DOMContentLoaded', () => {
         mainContent.classList.remove('map-active');
         mapViewButton.textContent = 'Map View';
 
-        // Wait for transition to gallery then open card
-        // Transition duration is 0.8s in CSS
-        setTimeout(() => {
+        // Use transitionend to ensure smooth switching
+        const onTransitionEnd = (evt) => {
+            if (
+                evt.target === mainContent &&
+                (evt.propertyName === 'grid-template-rows' || evt.propertyName === 'opacity')
+            ) {
+                mainContent.removeEventListener('transitionend', onTransitionEnd);
+                galleryController.openCardByIndex(index);
+            }
+        };
+
+        // Fallback in case transition doesn't fire (e.g. hidden tab)
+        const fallbackTimer = setTimeout(() => {
+            mainContent.removeEventListener('transitionend', onTransitionEnd);
             galleryController.openCardByIndex(index);
-        }, 800);
+        }, 850); // slightly longer than CSS transition
+
+        mainContent.addEventListener('transitionend', (evt) => {
+            clearTimeout(fallbackTimer);
+            onTransitionEnd(evt);
+        });
     });
 
     // Event Listeners: Close Actions

@@ -1,36 +1,44 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; style-src-attr 'self' 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.tile.openstreetmap.org; upgrade-insecure-requests;">
-    <meta name="description" content="A digital reverie of Pondicherry, exploring its heritage and beauty.">
-    <title>Pondicherry: A Digital Reverie</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-</head>
-<body>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+            http-equiv="Content-Security-Policy"
+            content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.tile.openstreetmap.org; upgrade-insecure-requests;"
+        />
+        <meta
+            name="description"
+            content="A digital reverie of Pondicherry, exploring its heritage and beauty."
+        />
+        <title>Pondicherry: A Digital Reverie</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@300;400;600&display=swap"
+            rel="stylesheet"
+        />
+    </head>
+    <body>
+        <header class="hero">
+            <div class="hero__background-shape" id="shape1"></div>
+            <div class="hero__background-shape" id="shape2"></div>
+            <h1 class="hero__title">Echoes of the Coromandel</h1>
+            <h2 class="hero__subtitle">A Photographer's Journal</h2>
+            <button class="map-view-button">Map View</button>
+            <div class="scroll-indicator">↓</div>
+        </header>
 
-    <header class="hero">
-        <div class="hero__background-shape" id="shape1"></div>
-        <div class="hero__background-shape" id="shape2"></div>
-        <h1 class="hero__title">Echoes of the Coromandel</h1>
-        <h2 class="hero__subtitle">A Photographer's Journal</h2>
-        <button class="map-view-button">Map View</button>
-        <div class="scroll-indicator">↓</div>
-    </header>
+        <div class="main-content">
+            <div id="map"></div>
+            <main class="gallery-container">
+                <!-- Dynamically populated by app.js -->
+            </main>
+        </div>
 
-    <div class="main-content">
-        <div id="map"></div>
-        <main class="gallery-container">
-            <!-- Dynamically populated by app.js -->
-        </main>
-    </div>
+        <div class="click-outside-overlay"></div>
+        <button class="close-button" aria-label="Close">×</button>
 
-    <div class="click-outside-overlay"></div>
-    <button class="close-button" aria-label="Close">×</button>
-
-    <script type="module" src="./app.js"></script>
-</body>
+        <script type="module" src="./app.js"></script>
+    </body>
 </html>
