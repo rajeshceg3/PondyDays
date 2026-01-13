@@ -57,12 +57,18 @@ document.addEventListener('DOMContentLoaded', () => {
             mapViewButton.textContent = 'Gallery View';
             if (!mapController) {
                 // Lazy load the map
+                const mapContainer = document.getElementById('map');
+                mapContainer.classList.add('is-loading');
                 try {
                     mapController = await loadMap('map', postcards);
                 } catch (e) {
                     // eslint-disable-next-line no-console
                     console.error('Error loading map:', e);
                     mapViewButton.textContent = 'Map Unavailable';
+                    // Show visual error in map container
+                    mapContainer.innerHTML = '<div class="error-message">Unable to load map. Please try again.</div>';
+                } finally {
+                    mapContainer.classList.remove('is-loading');
                 }
             } else {
                 mapController.initMap();

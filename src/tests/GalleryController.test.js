@@ -6,7 +6,7 @@ const mockData = [
     {
         title: 'Test Card',
         tagline: 'Test Tagline',
-        desc: 'Test Description',
+        desc: 'Test Description<br>Second Line',
         image: 'https://images.unsplash.com/photo-test',
         bgColor: '#ffffff',
         lat: 0,
@@ -27,6 +27,21 @@ describe('GalleryController', () => {
         onOpen = vi.fn();
         onClose = vi.fn();
         galleryController = new GalleryController('.gallery-container', mockData, onOpen, onClose);
+
+        // Mock matchMedia
+        window.matchMedia = vi.fn().mockImplementation(query => ({
+            matches: false,
+            media: query,
+            onchange: null,
+            addListener: vi.fn(), // deprecated
+            removeListener: vi.fn(), // deprecated
+            addEventListener: vi.fn(),
+            removeEventListener: vi.fn(),
+            dispatchEvent: vi.fn(),
+        }));
+
+        // Mock scrollTo
+        window.scrollTo = vi.fn();
     });
 
     afterEach(() => {
@@ -39,6 +54,18 @@ describe('GalleryController', () => {
         const cards = container.querySelectorAll('.postcard');
         expect(cards.length).toBe(1);
         expect(cards[0].querySelector('.postcard__title').textContent).toBe('Test Card');
+    });
+
+    it('should parse <br> tags in description', () => {
+        galleryController.render();
+        const focusContent = container.querySelector('.focus-content');
+        const paragraphs = focusContent.querySelectorAll('p');
+        // The first p is usually the desc if handled that way, or we might append multiple p's
+        // In our implementation, we append multiple p tags.
+        // Wait, did I implement it as multiple p tags? Yes.
+        expect(paragraphs.length).toBe(2);
+        expect(paragraphs[0].textContent).toBe('Test Description');
+        expect(paragraphs[1].textContent).toBe('Second Line');
     });
 
     it('should optimize unsplash urls', () => {
@@ -94,5 +121,27 @@ describe('GalleryController', () => {
         // Note: 'is-active' is removed immediately, 'is-closing' added
         expect(card.classList.contains('is-active')).toBe(false);
         expect(card.classList.contains('is-closing')).toBe(true);
+    });
+
+    it('should respect prefers-reduced-motion', () => {
+        window.matchMedia = vi.fn().mockImplementation(query => ({
+            matches: query === '(prefers-reduced-motion: reduce)',
+            media: query,
+            // ...
+        }));
+
+        galleryController.render();
+        const card = container.querySelector('.postcard');
+
+        galleryController.openPostcard(card);
+
+        expect(card.classList.contains('is-active')).toBe(true);
+        // Should NOT have is-opening class if motion is reduced
+        expect(card.classList.contains('is-opening')).toBe(false);
+
+        galleryController.closePostcard();
+        expect(card.classList.contains('is-active')).toBe(false);
+        // Should NOT have is-closing class if motion is reduced
+        expect(card.classList.contains('is-closing')).toBe(false);
     });
 });

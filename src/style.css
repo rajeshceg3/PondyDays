@@ -239,6 +239,9 @@ body::before {
     font-weight: 300;
     margin-bottom: 1.5rem;
 }
+.focus-content p {
+    margin-bottom: 1rem;
+}
 
 .focus-title-margin {
     margin-bottom: 1.5rem;
