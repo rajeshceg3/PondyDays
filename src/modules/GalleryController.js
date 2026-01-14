@@ -22,22 +22,19 @@ export default class GalleryController {
         article.dataset.index = index;
         article.dataset.bgColor = item.bgColor;
         article.dataset.themeClass = item.themeClass;
-        // Keep these for legacy or CSS usage if needed, though we use data directly now
         article.dataset.lat = item.lat;
         article.dataset.lng = item.lng;
         article.setAttribute('tabindex', '0');
         article.setAttribute('role', 'button');
+        article.setAttribute('aria-label', `View details for ${item.title}`);
 
-        // Optimize Images: Use the w= parameter from Unsplash
         const thumbUrl = this.optimizeUrl(item.image, 600);
         const mediumUrl = this.optimizeUrl(item.image, 900);
         const fullUrl = this.optimizeUrl(item.image, 1200);
 
-        // Generate srcset
         const srcset = `${thumbUrl} 600w, ${mediumUrl} 900w, ${fullUrl} 1200w`;
         const sizes = '(max-width: 600px) 90vw, (max-width: 900px) 50vw, 300px';
 
-        // Create elements securely using DOM API to prevent XSS
         const imageWrapper = document.createElement('div');
         imageWrapper.className = 'postcard__image-wrapper';
 
@@ -51,14 +48,11 @@ export default class GalleryController {
         img.width = 600;
         img.height = 800;
 
-        // Image Error Handling
         img.onerror = () => {
             img.style.display = 'none';
             const errorDiv = document.createElement('div');
-            errorDiv.className = 'image-error';
+            errorDiv.className = 'image-error image-error-placeholder';
             errorDiv.textContent = 'Image not available';
-            // Avoid inline styles
-            errorDiv.classList.add('image-error-placeholder');
             imageWrapper.appendChild(errorDiv);
         };
 
@@ -82,16 +76,20 @@ export default class GalleryController {
         focusContent.className = 'focus-content';
 
         const focusTitle = document.createElement('h3');
-        focusTitle.className = 'postcard__title';
-        // Avoid inline style: style="margin-bottom: 1.5rem;"
-        focusTitle.classList.add('focus-title-margin');
+        focusTitle.className = 'postcard__title focus-title-margin';
         focusTitle.textContent = item.title;
 
-        const desc = document.createElement('p');
-        desc.textContent = item.desc;
-
         focusContent.appendChild(focusTitle);
-        focusContent.appendChild(desc);
+
+        // Handle text formatting securely
+        const paragraphs = item.desc.split(/<br\s*\/?>/i);
+        paragraphs.forEach((text) => {
+            if (text.trim()) {
+                const p = document.createElement('p');
+                p.textContent = text.trim();
+                focusContent.appendChild(p);
+            }
+        });
 
         article.appendChild(imageWrapper);
         article.appendChild(overlay);
@@ -136,6 +134,15 @@ export default class GalleryController {
 
         if (this.onCardOpen) this.onCardOpen(postcard);
 
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        if (prefersReducedMotion) {
+            postcard.classList.add('is-active');
+            const img = postcard.querySelector('img');
+            if (img) img.sizes = '100vw';
+            return;
+        }
+
         const initialRect = postcard.getBoundingClientRect();
         postcard.classList.add('is-active', 'is-opening');
         const finalRect = postcard.getBoundingClientRect();
@@ -149,7 +156,6 @@ export default class GalleryController {
         postcard.style.transform = `translate(${invertX}px, ${invertY}px) scale(${scaleX}, ${scaleY})`;
         postcard.style.transformOrigin = 'top left';
 
-        // Update sizes for full screen view to prioritize high res
         const img = postcard.querySelector('img');
         if (img) {
             img.sizes = '100vw';
@@ -176,6 +182,19 @@ export default class GalleryController {
         const postcard = this.activePostcard;
 
         if (this.onCardClose) this.onCardClose(postcard);
+
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        if (prefersReducedMotion) {
+            postcard.classList.remove('is-active');
+             const img = postcard.querySelector('img');
+            if (img) {
+                img.sizes = '(max-width: 600px) 90vw, (max-width: 900px) 50vw, 300px';
+            }
+            this.activePostcard = null;
+            window.scrollTo({ top: this.lastScrollY, behavior: 'instant' });
+            return;
+        }
 
         const startRect = postcard.getBoundingClientRect();
 
