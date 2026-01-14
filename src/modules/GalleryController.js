@@ -187,7 +187,7 @@ export default class GalleryController {
 
         if (prefersReducedMotion) {
             postcard.classList.remove('is-active');
-             const img = postcard.querySelector('img');
+            const img = postcard.querySelector('img');
             if (img) {
                 img.sizes = '(max-width: 600px) 90vw, (max-width: 900px) 50vw, 300px';
             }

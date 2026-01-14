@@ -66,7 +66,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     console.error('Error loading map:', e);
                     mapViewButton.textContent = 'Map Unavailable';
                     // Show visual error in map container
-                    mapContainer.innerHTML = '<div class="error-message">Unable to load map. Please try again.</div>';
+                    mapContainer.textContent = '';
+                    const errorDiv = document.createElement('div');
+                    errorDiv.className = 'error-message';
+                    errorDiv.textContent = 'Unable to load map. Please try again.';
+                    mapContainer.appendChild(errorDiv);
                 } finally {
                     mapContainer.classList.remove('is-loading');
                 }

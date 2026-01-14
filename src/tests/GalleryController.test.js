@@ -29,7 +29,7 @@ describe('GalleryController', () => {
         galleryController = new GalleryController('.gallery-container', mockData, onOpen, onClose);
 
         // Mock matchMedia
-        window.matchMedia = vi.fn().mockImplementation(query => ({
+        window.matchMedia = vi.fn().mockImplementation((query) => ({
             matches: false,
             media: query,
             onchange: null,
@@ -124,7 +124,7 @@ describe('GalleryController', () => {
     });
 
     it('should respect prefers-reduced-motion', () => {
-        window.matchMedia = vi.fn().mockImplementation(query => ({
+        window.matchMedia = vi.fn().mockImplementation((query) => ({
             matches: query === '(prefers-reduced-motion: reduce)',
             media: query,
             // ...
