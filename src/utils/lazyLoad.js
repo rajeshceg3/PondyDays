@@ -24,8 +24,11 @@ export async function loadMap(elementId, data) {
         return mapController;
     } catch (error) {
         container.classList.remove('is-loading');
-        container.innerHTML =
-            '<div class="error-message">Unable to load map. Please try again later.</div>';
+        container.textContent = '';
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'error-message';
+        errorDiv.textContent = 'Unable to load map. Please try again later.';
+        container.appendChild(errorDiv);
         // eslint-disable-next-line no-console
         console.error('Failed to load map module:', error);
         throw error;
