@@ -11,6 +11,11 @@ export default class GalleryController {
     render() {
         this.container.innerHTML = '';
         this.data.forEach((item, index) => {
+            if (!item || !item.image || !item.title) {
+                // eslint-disable-next-line no-console
+                console.warn(`Skipping invalid postcard data at index ${index}`);
+                return;
+            }
             const card = this.createCardElement(item, index);
             this.container.appendChild(card);
         });
@@ -82,7 +87,8 @@ export default class GalleryController {
         focusContent.appendChild(focusTitle);
 
         // Handle text formatting securely
-        const paragraphs = item.desc.split(/<br\s*\/?>/i);
+        const desc = item.desc || '';
+        const paragraphs = desc.split(/<br\s*\/?>/i);
         paragraphs.forEach((text) => {
             if (text.trim()) {
                 const p = document.createElement('p');
