@@ -2,6 +2,7 @@ import { postcards } from './data/postcards.js';
 import GalleryController from './modules/GalleryController.js';
 import FocusManager from './modules/FocusManager.js';
 import { loadMap } from './utils/lazyLoad.js';
+import { debounce } from './utils/debounce.js';
 import './style.css'; // Vite imports CSS
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -48,6 +49,41 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initial Render
     galleryController.render();
 
+    const initMapController = async () => {
+        const mapContainer = document.getElementById('map');
+        mapContainer.classList.add('is-loading');
+        try {
+            mapController = await loadMap('map', postcards);
+        } catch (e) {
+            // eslint-disable-next-line no-console
+            console.error('Error loading map:', e);
+            mapViewButton.textContent = 'Map Unavailable';
+
+            mapContainer.textContent = '';
+            const errorWrapper = document.createElement('div');
+            errorWrapper.className = 'error-wrapper';
+
+            const errorMsg = document.createElement('p');
+            errorMsg.className = 'error-message';
+            errorMsg.textContent = 'Unable to load map.';
+
+            const retryBtn = document.createElement('button');
+            retryBtn.className = 'retry-button';
+            retryBtn.textContent = 'Retry';
+            retryBtn.onclick = () => {
+                mapContainer.textContent = '';
+                mapViewButton.textContent = 'Gallery View';
+                initMapController();
+            };
+
+            errorWrapper.appendChild(errorMsg);
+            errorWrapper.appendChild(retryBtn);
+            mapContainer.appendChild(errorWrapper);
+        } finally {
+            mapContainer.classList.remove('is-loading');
+        }
+    };
+
     // Event Listeners: Map
     mapViewButton.addEventListener('click', async () => {
         mainContent.classList.toggle('map-active');
@@ -56,24 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isActive) {
             mapViewButton.textContent = 'Gallery View';
             if (!mapController) {
-                // Lazy load the map
-                const mapContainer = document.getElementById('map');
-                mapContainer.classList.add('is-loading');
-                try {
-                    mapController = await loadMap('map', postcards);
-                } catch (e) {
-                    // eslint-disable-next-line no-console
-                    console.error('Error loading map:', e);
-                    mapViewButton.textContent = 'Map Unavailable';
-                    // Show visual error in map container
-                    mapContainer.textContent = '';
-                    const errorDiv = document.createElement('div');
-                    errorDiv.className = 'error-message';
-                    errorDiv.textContent = 'Unable to load map. Please try again.';
-                    mapContainer.appendChild(errorDiv);
-                } finally {
-                    mapContainer.classList.remove('is-loading');
-                }
+                await initMapController();
             } else {
                 mapController.initMap();
             }
@@ -127,7 +146,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    window.addEventListener('resize', () => {
-        galleryController.closeImmediate();
-    });
+    window.addEventListener(
+        'resize',
+        debounce(() => {
+            galleryController.closeImmediate();
+        }, 300)
+    );
 });

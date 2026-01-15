@@ -47,6 +47,23 @@ body::before {
     transition: opacity var(--transition-duration) var(--transition-curve);
 }
 
+/* --- ACCESSIBILITY --- */
+.skip-link {
+    position: absolute;
+    top: -100px;
+    left: 0;
+    background: var(--text-dark);
+    color: var(--bg-light);
+    padding: 1rem;
+    z-index: 9999;
+    font-weight: 600;
+    text-decoration: none;
+    transition: top 0.3s ease;
+}
+.skip-link:focus {
+    top: 0;
+}
+
 /* --- HERO SECTION --- */
 .hero {
     min-height: 100vh;
@@ -502,4 +519,26 @@ body.focus-active .click-outside-overlay {
     height: 100%;
     color: #d32f2f;
     font-weight: 500;
+}
+.error-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    gap: 1rem;
+}
+.retry-button {
+    background: var(--text-dark);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: var(--font-sans);
+    font-weight: 600;
+    transition: opacity 0.3s;
+}
+.retry-button:hover {
+    opacity: 0.8;
 }
