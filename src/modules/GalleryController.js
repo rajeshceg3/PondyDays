@@ -111,6 +111,18 @@ export default class GalleryController {
         article.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' || e.key === ' ') {
                 handleOpen(e);
+            } else if (e.key === 'ArrowRight') {
+                e.preventDefault();
+                const nextCard = article.nextElementSibling;
+                if (nextCard && nextCard.classList.contains('postcard')) {
+                    nextCard.focus();
+                }
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                const prevCard = article.previousElementSibling;
+                if (prevCard && prevCard.classList.contains('postcard')) {
+                    prevCard.focus();
+                }
             }
         });
 
