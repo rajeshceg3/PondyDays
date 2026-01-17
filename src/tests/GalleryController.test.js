@@ -4,14 +4,24 @@ import GalleryController from '../modules/GalleryController.js';
 // Mock data
 const mockData = [
     {
-        title: 'Test Card',
-        tagline: 'Test Tagline',
-        desc: 'Test Description<br>Second Line',
-        image: 'https://images.unsplash.com/photo-test',
+        title: 'Test Card 1',
+        tagline: 'Test Tagline 1',
+        desc: 'Test Description 1<br>Line 2',
+        image: 'https://images.unsplash.com/photo-test-1',
         bgColor: '#ffffff',
         lat: 0,
         lng: 0,
-        alt: 'Test Alt',
+        alt: 'Test Alt 1',
+    },
+    {
+        title: 'Test Card 2',
+        tagline: 'Test Tagline 2',
+        desc: 'Test Description 2',
+        image: 'https://images.unsplash.com/photo-test-2',
+        bgColor: '#000000',
+        lat: 1,
+        lng: 1,
+        alt: 'Test Alt 2',
     },
 ];
 
@@ -52,20 +62,17 @@ describe('GalleryController', () => {
     it('should render cards correctly', () => {
         galleryController.render();
         const cards = container.querySelectorAll('.postcard');
-        expect(cards.length).toBe(1);
-        expect(cards[0].querySelector('.postcard__title').textContent).toBe('Test Card');
+        expect(cards.length).toBe(2);
+        expect(cards[0].querySelector('.postcard__title').textContent).toBe('Test Card 1');
     });
 
     it('should parse <br> tags in description', () => {
         galleryController.render();
         const focusContent = container.querySelector('.focus-content');
         const paragraphs = focusContent.querySelectorAll('p');
-        // The first p is usually the desc if handled that way, or we might append multiple p's
-        // In our implementation, we append multiple p tags.
-        // Wait, did I implement it as multiple p tags? Yes.
         expect(paragraphs.length).toBe(2);
-        expect(paragraphs[0].textContent).toBe('Test Description');
-        expect(paragraphs[1].textContent).toBe('Second Line');
+        expect(paragraphs[0].textContent).toBe('Test Description 1');
+        expect(paragraphs[1].textContent).toBe('Line 2');
     });
 
     it('should optimize unsplash urls', () => {
@@ -143,5 +150,38 @@ describe('GalleryController', () => {
         expect(card.classList.contains('is-active')).toBe(false);
         // Should NOT have is-closing class if motion is reduced
         expect(card.classList.contains('is-closing')).toBe(false);
+    });
+
+    it('should handle keyboard navigation (Arrow Keys)', () => {
+        galleryController.render();
+        const cards = container.querySelectorAll('.postcard');
+        const card1 = cards[0];
+        const card2 = cards[1];
+
+        // Focus first card
+        card1.focus();
+        expect(document.activeElement).toBe(card1);
+
+        // Press ArrowRight on card1
+        const rightEvent = new KeyboardEvent('keydown', {
+            key: 'ArrowRight',
+            bubbles: true,
+            cancelable: true,
+        });
+        card1.dispatchEvent(rightEvent);
+
+        // Expect focus to be on card2
+        expect(document.activeElement).toBe(card2);
+
+        // Press ArrowLeft on card2
+        const leftEvent = new KeyboardEvent('keydown', {
+            key: 'ArrowLeft',
+            bubbles: true,
+            cancelable: true,
+        });
+        card2.dispatchEvent(leftEvent);
+
+        // Expect focus to be on card1
+        expect(document.activeElement).toBe(card1);
     });
 });
