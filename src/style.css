@@ -213,14 +213,21 @@ body::before {
 }
 .postcard__overlay {
     position: absolute;
-    inset: 0;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.6) 0%, transparent 50%);
-    border-radius: 12px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
     padding: 1.5rem;
     color: white;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
     opacity: 1;
     transition: opacity 0.5s var(--transition-curve);
 }
