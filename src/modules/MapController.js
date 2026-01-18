@@ -47,7 +47,15 @@ export default class MapController {
         this.data.forEach((item, index) => {
             if (item.lat && item.lng) {
                 const marker = L.marker([item.lat, item.lng]).addTo(this.map);
-                marker.bindPopup(`<b>${item.title}</b><br>${item.tagline}`);
+
+                const popupContent = document.createElement('div');
+                const title = document.createElement('b');
+                title.textContent = item.title;
+                popupContent.appendChild(title);
+                popupContent.appendChild(document.createElement('br'));
+                popupContent.appendChild(document.createTextNode(item.tagline));
+
+                marker.bindPopup(popupContent);
 
                 marker.on('click', () => {
                     // Dispatch a custom event so the main app can handle opening the card
