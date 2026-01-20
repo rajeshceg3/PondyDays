@@ -387,14 +387,14 @@ body.focus-active .click-outside-overlay {
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: auto 0;
-    transition: grid-template-rows 0.8s var(--transition-curve);
+    transition: grid-template-rows var(--transition-duration) var(--transition-curve);
 }
 #map {
     grid-row: 1 / 2;
     grid-column: 1 / 2;
     height: 0;
     opacity: 0;
-    transition: opacity 0.8s var(--transition-curve);
+    transition: opacity var(--transition-duration) var(--transition-curve);
     z-index: 1;
 }
 .gallery-container {

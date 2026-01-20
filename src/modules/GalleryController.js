@@ -42,6 +42,9 @@ export default class GalleryController {
 
         const imageWrapper = document.createElement('div');
         imageWrapper.className = 'postcard__image-wrapper';
+        if (item.bgColor) {
+            imageWrapper.style.backgroundColor = item.bgColor;
+        }
 
         const img = document.createElement('img');
         img.src = thumbUrl;
