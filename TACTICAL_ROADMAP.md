@@ -2,31 +2,36 @@
 
 **Mission:** Elevate "pondy-days" to Elite Production Status.
 **Commander:** Mission Specialist Jules
-**Current Phase:** Phase 5 - Polish & Sustain
+**Current Phase:** Phase 5 - User Experience Perfection
 
 ## Phase 1-4: Foundation (Completed)
 - Architecture, PWA, Feedback Systems, and CI/CD are established and verified.
 
-## Phase 5: User Experience Perfection [IN PROGRESS]
+## Phase 5: User Experience Perfection [IMMEDIATE PRIORITY]
 _Objective: Eliminate friction and enhance visual continuity._
 
-- [ ] **Visual Continuity (Blur-Up):**
-    - **Tactic:** Utilize `bgColor` from data as a placeholder for lazy-loaded images.
-    - **Target:** `src/modules/GalleryController.js`
-    - **Effect:** Eliminates white flash/empty space during load.
+### 5.1 Visual Continuity (Graceful Entry)
+- **Problem:** Images "pop" into existence, breaking the reverie.
+- **Tactic:** Implement a zero-to-one opacity transition upon image load.
+- **Execution:**
+  - Modify `GalleryController.js`.
+  - Add `is-loaded` class to images upon `load` event.
+  - Add CSS transition for `opacity`.
+- **Success Metric:** No visible "white flash" or abrupt cut. Smooth fade-in over colored placeholder.
 
-- [ ] **Motion Harmony:**
-    - **Tactic:** Synchronize Map Toggle transition with global variables.
-    - **Target:** `src/style.css`
-    - **Effect:** Creates a cohesive "breathing" rhythm to the UI.
+### 5.2 Motion Harmony (Synchronization)
+- **Problem:** JS/CSS timing mismatch (600ms vs 850ms/Hardcoded).
+- **Tactic:** Tighten the OODA loop (Observe-Orient-Decide-Act) for transitions.
+- **Execution:**
+  - Extract transition duration to a shared constant or read from CSS.
+  - Refine `AppController.js` map toggle logic.
+- **Success Metric:** Map toggle feels instantaneous and fluid.
 
-- [ ] **Environment Hardening:**
-    - **Tactic:** Verify Test Suite (Unit + E2E) in local environment.
-    - **Effect:** Ensures reliability after environmental recovery.
+## Phase 6: Maintenance & Hardening [SECONDARY]
+_Objective: Ensure long-term operational viability._
 
-## Phase 6: Maintenance (Future)
-- Upgrade `eslint` to Flat Config (v9+).
-- Add Lighthouse CI checks.
+- [ ] **Dependency Upgrade:** Migrate `eslint` to v9 (Flat Config).
+- [ ] **Dependency Audit:** Prune deprecated transitive dependencies where possible.
 
 ---
-**Mission Status:** EXECUTING
+**Mission Status:** PENDING EXECUTION
