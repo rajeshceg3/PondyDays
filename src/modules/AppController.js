@@ -145,11 +145,11 @@ export default class AppController {
         };
 
         // Fallback in case transition doesn't fire
-        // 650ms = 600ms (CSS transition) + 50ms buffer
+        // 620ms = 600ms (CSS transition) + 20ms buffer for elite responsiveness
         const fallbackTimer = setTimeout(() => {
             this.dom.mainContent.removeEventListener('transitionend', onTransitionEnd);
             this.modules.galleryController.openCardByIndex(index);
-        }, 650);
+        }, 620);
 
         this.dom.mainContent.addEventListener('transitionend', (evt) => {
             clearTimeout(fallbackTimer);
