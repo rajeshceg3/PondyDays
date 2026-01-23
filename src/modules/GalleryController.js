@@ -57,7 +57,14 @@ export default class GalleryController {
         img.height = 800;
 
         const handleLoad = () => {
-            img.classList.add('is-loaded');
+            // Elite Performance: Ensure decoding is complete to preventing jank
+            if (img.decode) {
+                img.decode()
+                    .then(() => img.classList.add('is-loaded'))
+                    .catch(() => img.classList.add('is-loaded'));
+            } else {
+                img.classList.add('is-loaded');
+            }
         };
 
         img.onload = handleLoad;
