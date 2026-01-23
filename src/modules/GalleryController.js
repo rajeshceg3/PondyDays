@@ -56,6 +56,15 @@ export default class GalleryController {
         img.width = 600;
         img.height = 800;
 
+        const handleLoad = () => {
+            img.classList.add('is-loaded');
+        };
+
+        img.onload = handleLoad;
+        if (img.complete) {
+            handleLoad();
+        }
+
         img.onerror = () => {
             img.style.display = 'none';
             const errorDiv = document.createElement('div');

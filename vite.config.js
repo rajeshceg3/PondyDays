@@ -25,9 +25,9 @@ export default defineConfig({
                         src: 'icon.svg',
                         sizes: '512x512',
                         type: 'image/svg+xml',
-                        purpose: 'any maskable'
-                    }
-                ]
+                        purpose: 'any maskable',
+                    },
+                ],
             },
             workbox: {
                 globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
@@ -39,12 +39,12 @@ export default defineConfig({
                             cacheName: 'google-fonts-cache',
                             expiration: {
                                 maxEntries: 10,
-                                maxAgeSeconds: 60 * 60 * 24 * 365
+                                maxAgeSeconds: 60 * 60 * 24 * 365,
                             },
                             cacheableResponse: {
-                                statuses: [0, 200]
-                            }
-                        }
+                                statuses: [0, 200],
+                            },
+                        },
                     },
                     {
                         urlPattern: /^https:\/\/fonts\.gstatic\.com\/.*/i,
@@ -53,12 +53,12 @@ export default defineConfig({
                             cacheName: 'gstatic-fonts-cache',
                             expiration: {
                                 maxEntries: 10,
-                                maxAgeSeconds: 60 * 60 * 24 * 365
+                                maxAgeSeconds: 60 * 60 * 24 * 365,
                             },
                             cacheableResponse: {
-                                statuses: [0, 200]
-                            }
-                        }
+                                statuses: [0, 200],
+                            },
+                        },
                     },
                     {
                         urlPattern: /^https:\/\/images\.unsplash\.com\/.*/i,
@@ -67,12 +67,12 @@ export default defineConfig({
                             cacheName: 'unsplash-images-cache',
                             expiration: {
                                 maxEntries: 50,
-                                maxAgeSeconds: 60 * 60 * 24 * 30
+                                maxAgeSeconds: 60 * 60 * 24 * 30,
                             },
                             cacheableResponse: {
-                                statuses: [0, 200]
-                            }
-                        }
+                                statuses: [0, 200],
+                            },
+                        },
                     },
                     {
                         urlPattern: /^https:\/\/.*\.tile\.openstreetmap\.org\/.*/i,
@@ -81,15 +81,15 @@ export default defineConfig({
                             cacheName: 'map-tiles-cache',
                             expiration: {
                                 maxEntries: 100,
-                                maxAgeSeconds: 60 * 60 * 24 * 30
+                                maxAgeSeconds: 60 * 60 * 24 * 30,
                             },
                             cacheableResponse: {
-                                statuses: [0, 200]
-                            }
-                        }
-                    }
-                ]
-            }
-        })
-    ]
+                                statuses: [0, 200],
+                            },
+                        },
+                    },
+                ],
+            },
+        }),
+    ],
 });

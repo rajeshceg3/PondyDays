@@ -76,7 +76,10 @@ export default class AppController {
             // eslint-disable-next-line no-console
             console.error('Error loading map:', e);
             this.renderMapError();
-            this.modules.toastManager.show('Failed to load the map. Please check your connection.', 'error');
+            this.modules.toastManager.show(
+                'Failed to load the map. Please check your connection.',
+                'error'
+            );
         } finally {
             this.dom.mapContainer.classList.remove('is-loading');
         }
@@ -142,10 +145,11 @@ export default class AppController {
         };
 
         // Fallback in case transition doesn't fire
+        // 650ms = 600ms (CSS transition) + 50ms buffer
         const fallbackTimer = setTimeout(() => {
             this.dom.mainContent.removeEventListener('transitionend', onTransitionEnd);
             this.modules.galleryController.openCardByIndex(index);
-        }, 850);
+        }, 650);
 
         this.dom.mainContent.addEventListener('transitionend', (evt) => {
             clearTimeout(fallbackTimer);
