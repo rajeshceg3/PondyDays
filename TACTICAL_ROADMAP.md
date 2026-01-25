@@ -29,6 +29,12 @@ _Objective: Ensure long-term operational viability and supply chain security._
 - **Detail:** Increase Map Tile cache limit from 100 to 300 entries to support extended offline reconnaissance.
 - **Status:** PLANNED
 
+### 6.3 UX Hardening
+
+- **Task:** Implement "Smart Resize" logic and high-fidelity error states.
+- **Detail:** Prevent aggressive card closing on mobile address bar toggles; Replace text error states with thematic SVG iconography; Enforce ARIA state management on Map Toggles.
+- **Status:** COMPLETED
+
 ## Phase 7: Future Operations [PROPOSED]
 
 _Objective: Expand mission capabilities._

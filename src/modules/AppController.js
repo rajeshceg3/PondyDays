@@ -23,6 +23,8 @@ export default class AppController {
             mapController: null,
         };
 
+        this.lastWidth = window.innerWidth;
+
         this.bindEvents = this.bindEvents.bind(this);
         this.handleMapToggle = this.handleMapToggle.bind(this);
         this.handleMarkerClick = this.handleMarkerClick.bind(this);
@@ -114,6 +116,8 @@ export default class AppController {
         this.dom.mainContent.classList.toggle('map-active');
         const isActive = this.dom.mainContent.classList.contains('map-active');
 
+        this.dom.mapViewButton.setAttribute('aria-expanded', isActive);
+
         if (isActive) {
             this.dom.mapViewButton.textContent = 'Gallery View';
             if (!this.modules.mapController) {
@@ -195,7 +199,11 @@ export default class AppController {
         window.addEventListener(
             'resize',
             debounce(() => {
-                this.modules.galleryController.closeImmediate();
+                // Elite UX: Only close if width changes significantly (avoids mobile url bar jank)
+                if (Math.abs(window.innerWidth - this.lastWidth) > 50) {
+                    this.modules.galleryController.closeImmediate();
+                    this.lastWidth = window.innerWidth;
+                }
             }, 300)
         );
 

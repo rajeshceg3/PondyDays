@@ -51,6 +51,11 @@ This repository contains the source code for "Pondicherry: A Digital Reverie," a
     - JS: Check `window.matchMedia('(prefers-reduced-motion: reduce)')`.
     - CSS: Use media query override.
 
+### Visual Continuity
+
+- **Error States:** Use high-fidelity SVG icons for missing assets (images). Plain text is prohibited for visual components.
+- **Loading States:** Ensure background color placeholders (`bgColor`) match the content palette.
+
 ## 4. Deployment & Build
 
 - **Build:** `npm run build` must produce a clean asset directory without warnings.
