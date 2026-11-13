@@ -10,6 +10,9 @@ const mapMock = {
 const tileLayerMock = {
     addTo: vi.fn().mockReturnThis(),
 };
+
+// Stub the MapLibre GL Leaflet bridge so it never loads maplibre-gl in jsdom
+vi.mock('@maplibre/maplibre-gl-leaflet', () => ({}));
 const markerMock = {
     addTo: vi.fn().mockReturnThis(),
     bindPopup: vi.fn().mockReturnThis(),
@@ -21,6 +24,7 @@ vi.mock('leaflet', () => {
         default: {
             map: vi.fn(() => mapMock),
             tileLayer: vi.fn(() => tileLayerMock),
+            maplibreGL: vi.fn(() => tileLayerMock),
             marker: vi.fn(() => markerMock),
             Icon: {
                 Default: {
@@ -55,9 +59,9 @@ describe('MapController', () => {
     it('should initialize map correctly', () => {
         mapController.initMap();
 
-        expect(L.map).toHaveBeenCalledWith('map');
+        expect(L.map).toHaveBeenCalledWith('map', { maxZoom: 18 });
         expect(mapMock.setView).toHaveBeenCalledWith([11.9345, 79.831], 13); // Default view from code
-        expect(L.tileLayer).toHaveBeenCalled();
+        expect(L.maplibreGL).toHaveBeenCalled();
         expect(tileLayerMock.addTo).toHaveBeenCalledWith(mapMock);
     });
 
