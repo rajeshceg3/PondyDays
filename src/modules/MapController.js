@@ -1,5 +1,8 @@
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import '@maplibre/maplibre-gl-leaflet';
+import 'maplibre-gl/dist/maplibre-gl.css';
+import warmMapStyle from '../vendor/warm-map/style.json';
 
 // Fix for Leaflet marker icons in bundlers
 import iconRetinaUrl from 'leaflet/dist/images/marker-icon-2x.png';
@@ -33,11 +36,14 @@ export default class MapController {
 
         // Initialize map
         // Centered roughly on Pondicherry White Town
-        this.map = L.map(this.mapContainerId).setView([11.9345, 79.831], 13);
+        this.map = L.map(this.mapContainerId, { maxZoom: 18 }).setView([11.9345, 79.831], 13);
 
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '© OpenStreetMap',
+        // Warm-paper basemap: OpenFreeMap vector tiles via the MapLibre GL Leaflet bridge.
+        // Canonical style module shared across the worlds (src/vendor/warm-map/style.json).
+        L.maplibreGL({
+            style: warmMapStyle,
+            attribution:
+                '<a href="https://openfreemap.org" target="_blank">OpenFreeMap</a> © <a href="https://www.openmaptiles.org/" target="_blank">OpenMapTiles</a> Data from <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>',
         }).addTo(this.map);
 
         this.addMarkers();
