@@ -343,7 +343,8 @@ body.focus-active {
     overflow: hidden;
 }
 body.focus-active .gallery-container {
-    transform: scale(0.98);
+    transform: none;
+    z-index: 1000;
 }
 body.focus-active .postcard:not(.is-active) {
     filter: blur(10px);
@@ -368,7 +369,7 @@ body.focus-active .click-outside-overlay {
     z-index: 1000;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    align-items: center;
+    align-items: stretch;
     cursor: default;
     background: var(--bg-light);
     box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.3);
@@ -397,6 +398,9 @@ body.focus-active .click-outside-overlay {
 }
 .postcard.is-active .focus-content {
     display: block;
+    min-height: 0;
+    height: 100%;
+    overflow-y: auto;
     opacity: 0;
     transform: translateY(20px);
     animation: fadeIn 0.5s 0.3s var(--transition-curve) both;
@@ -496,8 +500,9 @@ body.focus-active .click-outside-overlay {
 @media (max-width: 768px) {
     .postcard.is-active {
         grid-template-columns: 1fr;
-        grid-template-rows: 250px 1fr;
-        height: 85vh;
+        grid-template-rows: minmax(0, 32%) minmax(0, 1fr);
+        height: 85dvh;
+        max-height: 720px;
         width: 95vw;
     }
     .focus-content {
@@ -638,3 +643,24 @@ body.focus-active .click-outside-overlay {
 .toast__close:hover {
     opacity: 1;
 }
+
+/* A real full-screen map view, with one clear return to the journal. */
+.main-content { min-width: 0; grid-template-columns: minmax(0, 1fr); }
+.gallery-container { min-width: 0; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); }
+#map { min-width: 0; width: 100%; }
+body.map-mode { overflow: hidden; }
+body.map-mode .hero { position: fixed; inset: 16px 16px auto auto; min-height: 0; width: auto; padding: 0; overflow: visible; z-index: 1000; }
+body.map-mode .hero > :not(.map-view-button) { display: none; }
+body.map-mode .map-view-button { margin: 0; min-height: 44px; border-radius: 6px 14px 7px 12px; color: var(--text-dark); background: var(--bg-light); border: 1px solid #b2aaa0; box-shadow: var(--shadow-soft); }
+body.map-mode .map-view-button:hover { transform: none; }
+.main-content.map-active { position: fixed; inset: 0; width: 100%; height: 100dvh; z-index: 10; grid-template-rows: minmax(0, 1fr); }
+.main-content.map-active #map { width: 100%; height: 100dvh; }
+.main-content.map-active .gallery-container { display: none; }
+.map-view-button:focus-visible { outline: 3px solid #4e4a47; outline-offset: 3px; }
+@media (max-width: 600px) { .gallery-container { padding: 8vh 20px; gap: 32px; } }
+
+.map-view-button { min-height: 44px; background: var(--text-dark); color: var(--bg-light); border-color: var(--text-dark); font: 600 14px var(--font-sans); }
+
+.close-button { min-width: 44px; min-height: 44px; }
+
+@media (max-width: 768px) { .close-button { top: 8px; right: 10px; } }

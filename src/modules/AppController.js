@@ -112,53 +112,34 @@ export default class AppController {
         this.dom.mapContainer.appendChild(errorWrapper);
     }
 
+    setMapView(isActive) {
+        if (isActive && !this.dom.body.classList.contains('map-mode')) {
+            this.mapScrollY = window.scrollY;
+        }
+        this.dom.mainContent.classList.toggle('map-active', isActive);
+        this.dom.body.classList.toggle('map-mode', isActive);
+        this.dom.mapViewButton.setAttribute('aria-expanded', String(isActive));
+        this.dom.mapViewButton.textContent = isActive ? 'Gallery View' : 'Map View';
+        this.dom.mainContent.querySelector('.gallery-container').inert = isActive;
+        this.dom.mapContainer.inert = !isActive;
+        if (!isActive) window.scrollTo({ top: this.mapScrollY || 0, behavior: 'instant' });
+    }
+
     async handleMapToggle() {
-        this.dom.mainContent.classList.toggle('map-active');
-        const isActive = this.dom.mainContent.classList.contains('map-active');
-
-        this.dom.mapViewButton.setAttribute('aria-expanded', isActive);
-
+        const isActive = !this.dom.mainContent.classList.contains('map-active');
+        this.setMapView(isActive);
         if (isActive) {
-            this.dom.mapViewButton.textContent = 'Gallery View';
-            if (!this.modules.mapController) {
-                await this.initMapController();
-            } else {
-                this.modules.mapController.initMap();
-            }
-        } else {
-            this.dom.mapViewButton.textContent = 'Map View';
+            if (!this.modules.mapController) await this.initMapController();
+            else this.modules.mapController.initMap();
         }
     }
 
     handleMarkerClick(e) {
         const { index } = e.detail;
-
-        // Switch back to gallery view
-        this.dom.mainContent.classList.remove('map-active');
-        this.dom.mapViewButton.textContent = 'Map View';
-
-        // Use transitionend to ensure smooth switching
-        const onTransitionEnd = (evt) => {
-            if (
-                evt.target === this.dom.mainContent &&
-                (evt.propertyName === 'grid-template-rows' || evt.propertyName === 'opacity')
-            ) {
-                this.dom.mainContent.removeEventListener('transitionend', onTransitionEnd);
-                this.modules.galleryController.openCardByIndex(index);
-            }
-        };
-
-        // Fallback in case transition doesn't fire
-        // 620ms = 600ms (CSS transition) + 20ms buffer for elite responsiveness
-        const fallbackTimer = setTimeout(() => {
-            this.dom.mainContent.removeEventListener('transitionend', onTransitionEnd);
-            this.modules.galleryController.openCardByIndex(index);
-        }, 620);
-
-        this.dom.mainContent.addEventListener('transitionend', (evt) => {
-            clearTimeout(fallbackTimer);
-            onTransitionEnd(evt);
-        });
+        this.setMapView(false);
+        this.dom.mapViewButton.focus();
+        // The gallery is laid out again before measuring the postcard.
+        requestAnimationFrame(() => this.modules.galleryController.openCardByIndex(index));
     }
 
     handleClose() {

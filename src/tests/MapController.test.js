@@ -77,8 +77,8 @@ describe('MapController', () => {
 
         // Should add 2 markers, skipping the invalid one
         expect(L.marker).toHaveBeenCalledTimes(2);
-        expect(L.marker).toHaveBeenCalledWith([10, 20]);
-        expect(L.marker).toHaveBeenCalledWith([30, 40]);
+        expect(L.marker).toHaveBeenCalledWith([10, 20], { alt: 'Place 1', title: 'Place 1' });
+        expect(L.marker).toHaveBeenCalledWith([30, 40], { alt: 'Place 2', title: 'Place 2' });
         expect(markerMock.addTo).toHaveBeenCalledWith(mapMock);
         expect(markerMock.bindPopup).toHaveBeenCalledTimes(2);
     });
@@ -103,6 +103,18 @@ describe('MapController', () => {
         expect(event.type).toBe('marker-clicked');
         expect(event.detail.index).toBe(0);
         expect(event.detail.data).toEqual(mockData[0]);
+    });
+
+    it('should let Enter and Space open a named place', () => {
+        const dispatchSpy = vi.spyOn(document, 'dispatchEvent');
+        mapController.initMap();
+        const keyHandler = markerMock.on.mock.calls.find(([event]) => event === 'keypress')[1];
+        for (const key of ['Enter', ' ']) {
+            const preventDefault = vi.fn();
+            keyHandler({ originalEvent: { key, preventDefault } });
+            expect(preventDefault).toHaveBeenCalled();
+            expect(dispatchSpy.mock.calls.at(-1)[0].detail.index).toBe(0);
+        }
     });
 
     it('should invalidate size when requested', () => {

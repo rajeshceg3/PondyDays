@@ -52,7 +52,7 @@ export default class MapController {
     addMarkers() {
         this.data.forEach((item, index) => {
             if (item.lat && item.lng) {
-                const marker = L.marker([item.lat, item.lng]).addTo(this.map);
+                const marker = L.marker([item.lat, item.lng], { alt: item.title, title: item.title }).addTo(this.map);
 
                 const popupContent = document.createElement('div');
                 const title = document.createElement('b');
@@ -63,12 +63,19 @@ export default class MapController {
 
                 marker.bindPopup(popupContent);
 
-                marker.on('click', () => {
+                const choosePlace = () => {
                     // Dispatch a custom event so the main app can handle opening the card
                     const event = new CustomEvent('marker-clicked', {
                         detail: { index: index, data: item },
                     });
                     document.dispatchEvent(event);
+                };
+                marker.on('click', choosePlace);
+                marker.on('keypress', (e) => {
+                    if (e.originalEvent.key === 'Enter' || e.originalEvent.key === ' ') {
+                        e.originalEvent.preventDefault();
+                        choosePlace();
+                    }
                 });
 
                 this.markers.push(marker);
