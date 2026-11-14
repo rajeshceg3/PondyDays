@@ -9,7 +9,7 @@ for (const width of [320, 390, 1280]) {
         await page.goto('/');
         await expect(page.locator('.postcard').first()).toBeVisible();
         expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBeTruthy();
-        await page.screenshot({ path: `/downloads/pondy-gallery-${width}.png`, fullPage: false });
+        await page.screenshot({ path: test.info().outputPath(`pondy-gallery-${width}.png`), fullPage: false });
         await page.getByRole('button', { name: 'Map View', exact: true }).click();
         await expect(page.locator('.leaflet-marker-icon').first()).toBeVisible();
         await page.waitForFunction(() => {
@@ -24,7 +24,7 @@ for (const width of [320, 390, 1280]) {
         expect(box.height).toBe(844);
         await expect(page.getByRole('button', { name: 'Gallery View', exact: true })).toBeVisible();
         await expect(page.locator('.leaflet-control-attribution')).toBeVisible();
-        await page.screenshot({ path: `/downloads/pondy-map-${width}.png` });
+        await page.screenshot({ path: test.info().outputPath(`pondy-map-${width}.png`) });
         const count = await page.locator('.leaflet-marker-icon').count();
         for (let i = 0; i < count; i++) {
             if (i > 0) {
@@ -42,7 +42,7 @@ for (const width of [320, 390, 1280]) {
             expect(detailBox.x + detailBox.width).toBeLessThanOrEqual(width);
             expect(detailBox.y + detailBox.height).toBeLessThanOrEqual(844);
             await expect(page.locator('.focus-content').nth(i)).toBeInViewport();
-            if (i === 0) await page.screenshot({ path: `/downloads/pondy-detail-${width}.png` });
+            if (i === 0) await page.screenshot({ path: test.info().outputPath(`pondy-detail-${width}.png`) });
             await page.keyboard.press('Escape');
             await expect(page.locator('.postcard.is-active')).toHaveCount(0);
         }

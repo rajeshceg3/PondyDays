@@ -9,7 +9,7 @@ for (const width of [320, 390]) {
         await page.goto('/');
         await page.getByRole('button', { name: 'Map View', exact: true }).tap();
         await page.waitForFunction(() => document.querySelector('#map')._warmMap?.queryRenderedFeatures().length > 0);
-        await page.screenshot({ path: `/downloads/pondy-security-normal-map-${width}.png` });
+        await page.screenshot({ path: test.info().outputPath(`pondy-security-normal-map-${width}.png`) });
         await page.locator('.leaflet-marker-icon').last().tap();
         const card = page.locator('.postcard.is-active');
         await expect(card).toBeVisible();
