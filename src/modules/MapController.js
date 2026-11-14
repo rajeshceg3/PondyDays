@@ -1,4 +1,7 @@
 import L from 'leaflet';
+import { setWorkerUrl } from 'maplibre-gl';
+import mapWorkerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?url';
+setWorkerUrl(mapWorkerUrl);
 import 'leaflet/dist/leaflet.css';
 import '@maplibre/maplibre-gl-leaflet';
 import 'maplibre-gl/dist/maplibre-gl.css';
@@ -40,11 +43,14 @@ export default class MapController {
 
         // Warm-paper basemap: OpenFreeMap vector tiles via the MapLibre GL Leaflet bridge.
         // Canonical style module shared across the worlds (src/vendor/warm-map/style.json).
-        L.maplibreGL({
+        const glLayer = L.maplibreGL({
             style: warmMapStyle,
             attribution:
                 '<a href="https://openfreemap.org" target="_blank">OpenFreeMap</a> © <a href="https://www.openmaptiles.org/" target="_blank">OpenMapTiles</a> Data from <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>',
         }).addTo(this.map);
+
+        // Read-only readiness handle for rendered-feature regression tests.
+        this.map.getContainer()._warmMap = glLayer.getMaplibreMap();
 
         this.addMarkers();
     }

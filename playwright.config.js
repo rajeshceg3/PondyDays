@@ -10,6 +10,7 @@ export default defineConfig({
     use: {
         baseURL: 'http://localhost:5173',
         trace: 'on-first-retry',
+        launchOptions: { ...(process.env.CHROME_PATH ? { executablePath: process.env.CHROME_PATH } : {}), args: ['--enable-unsafe-swiftshader'] },
     },
     projects: [
         {
@@ -18,8 +19,8 @@ export default defineConfig({
         },
     ],
     webServer: {
-        command: 'npm run dev',
+        command: 'npm run build && npm run preview -- --host 127.0.0.1 --port 5173 --strictPort',
         url: 'http://localhost:5173',
-        reuseExistingServer: !process.env.CI,
+        reuseExistingServer: false,
     },
 });

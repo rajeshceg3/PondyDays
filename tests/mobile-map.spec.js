@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 for (const width of [320, 390, 1280]) {
     test(`map and postcard flow fits ${width}px`, async ({ page }) => {
+        test.setTimeout(90000);
         await page.setViewportSize({ width, height: 844 });
         await page.emulateMedia({ reducedMotion: 'reduce' });
         const errors = [];
@@ -11,6 +12,10 @@ for (const width of [320, 390, 1280]) {
         await page.screenshot({ path: `/downloads/pondy-gallery-${width}.png`, fullPage: false });
         await page.getByRole('button', { name: 'Map View', exact: true }).click();
         await expect(page.locator('.leaflet-marker-icon').first()).toBeVisible();
+        await page.waitForFunction(() => {
+            const map = document.querySelector('#map')._warmMap;
+            return map && map.queryRenderedFeatures().length > 0;
+        });
         await page.waitForTimeout(1200);
         const box = await page.locator('#map').boundingBox();
         expect(box.x).toBe(0);

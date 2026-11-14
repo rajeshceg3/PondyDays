@@ -4,15 +4,18 @@ import L from 'leaflet';
 
 // Setup Mocks
 const mapMock = {
+    getContainer: vi.fn(() => document.getElementById('map')),
     setView: vi.fn().mockReturnThis(),
     invalidateSize: vi.fn(),
 };
 const tileLayerMock = {
+    getMaplibreMap: vi.fn(() => ({ queryRenderedFeatures: vi.fn(() => []) })),
     addTo: vi.fn().mockReturnThis(),
 };
 
 // Stub the MapLibre GL Leaflet bridge so it never loads maplibre-gl in jsdom
 vi.mock('@maplibre/maplibre-gl-leaflet', () => ({}));
+vi.mock('maplibre-gl', () => ({ setWorkerUrl: vi.fn() }));
 const markerMock = {
     addTo: vi.fn().mockReturnThis(),
     bindPopup: vi.fn().mockReturnThis(),
@@ -63,6 +66,7 @@ describe('MapController', () => {
         expect(mapMock.setView).toHaveBeenCalledWith([11.9345, 79.831], 13); // Default view from code
         expect(L.maplibreGL).toHaveBeenCalled();
         expect(tileLayerMock.addTo).toHaveBeenCalledWith(mapMock);
+        expect(document.getElementById('map')._warmMap).toBe(tileLayerMock.getMaplibreMap.mock.results[0].value);
     });
 
     it('should not re-initialize if map exists', () => {
